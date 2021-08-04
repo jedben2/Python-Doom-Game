@@ -9,6 +9,7 @@ class Player(Entity):
     jetpack = False
     direction = "right"
     airtime = 0
+    health = 100
 
     def __init__(self):
         super().__init__()
