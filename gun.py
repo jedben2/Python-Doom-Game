@@ -32,7 +32,14 @@ class Bullet(Entity):
         self.rotation_z = gun.rotation_z
         self.position = Vec2(gun.x + 0.5 * np.cos(-1 * self.rotation_z * np.pi / 180),
                              gun.y + 0.5 * np.sin(-1 * self.rotation_z * np.pi / 180))
+        self.collider = 'box'
 
-    def update(self):
+    def travel(self, monsters, floor):
         self.position += self.right * 5
-        if self.x > 10 or self.x < -10: self.disable()
+        if self.x > 100 or self.x < -100: self.disable()
+        for monster in monsters:
+            if self.intersects(monster).hit:
+                monster.health -= 1
+                self.disable()
+        if self.intersects(floor).hit:
+            self.disable()
