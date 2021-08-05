@@ -22,9 +22,6 @@ p_healthbar.scale_x = .15
 g = gun.Gun(p)
 floor = Entity(model='quad', position=Vec2(0, -1), scale_x=50, collider='box', texture='grass')
 
-airtime_counter = Text(text=str(p.airtime))
-airtime_counter.scale = 3
-airtime_counter.position = (.8, -.4)
 camera.position = (p.x, p.y, -10)
 camera.add_script(SmoothFollow(target=p, offset=[0, 0, -25], speed=20))
 
@@ -58,13 +55,14 @@ def update():
     g.attach(p)
     g.look_at_mouse()
 
-    if held_keys['left mouse'] and shot_time > 1:
-        bullets.append(gun.Bullet(g))
-        shot_time = 0
-
     for bullet in bullets:
         bullet.travel(monsters, floor)
         if bullet.enabled == False: bullets.remove(bullet)
+
+    if held_keys['left mouse']:
+        bullets.append(gun.Bullet(g))
+        if shot_time > 1: shot_time = 0
+
 
     if shot_time < 2:
         relative_x, relative_y = g.screen_position.x, g.screen_position.y
@@ -78,7 +76,6 @@ def update():
         p.x += 0.12
         p.texture = f"assets//animations//player//shoot//{p.direction}//{shot_time}"
 
-    airtime_counter.text = str(int(np.floor(p.airtime)))
     p_healthbar.value = p.health
 
 
