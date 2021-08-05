@@ -25,7 +25,7 @@ airtime_counter = Text(text=str(p.airtime))
 airtime_counter.scale = 3
 airtime_counter.position = (.8, -.4)
 camera.position = (p.x, p.y, -10)
-camera.add_script(SmoothFollow(target=p, offset=[0, 0, -40], speed=20))
+camera.add_script(SmoothFollow(target=p, offset=[0, 0, -25], speed=20))
 
 bullets = []
 monsters = []
