@@ -32,14 +32,15 @@ class Bullet(Entity):
     def __init__(self, gun):
         super().__init__()
         self.model = 'quad'
-        self.scale = .1
-        self.rotation_z = gun.rotation_z + random.randrange(-400, 401) / 100
+        self.scale_y = .05
+        self.scale_x = .3
+        self.rotation_z = gun.rotation_z + random.randrange(-200, 201) / 100
         self.position = Vec2(gun.x + 0.1 * np.cos(-1 * self.rotation_z * np.pi / 180),
                              gun.y + 0.5 * np.sin(-1 * self.rotation_z * np.pi / 180))
         self.collider = 'box'
 
     def travel(self, monsters, floor):
-        self.position += self.right * 3
+        self.position += self.right * 1.5
         if self.x > 100 or self.x < -100: self.disable()
         for monster in monsters:
             if self.intersects(monster).hit:
