@@ -6,12 +6,13 @@ import numpy as np
 class Gun(Entity):
 
     def attach(self, p):
-        self.position = Vec2(p.x + 0.01, p.y)
+        self.position = Vec2(p.x + 0.01, p.y - .2)
 
     def __init__(self, p):
         super().__init__()
         self.model = 'quad'
-        self.scale_y = .2
+        self.scale_y = .1
+        self.scale_x = .5
         self.attach(p)
 
     def look_at_mouse(self):
