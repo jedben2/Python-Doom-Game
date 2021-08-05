@@ -36,6 +36,7 @@ class Bullet(Entity):
 
     def travel(self, monsters, floor):
         self.position += self.right * 5
+        self.rotation_z += random.randrange(-3, 4)
         if self.x > 100 or self.x < -100: self.disable()
         for monster in monsters:
             if self.intersects(monster).hit:
