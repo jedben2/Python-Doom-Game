@@ -13,6 +13,12 @@ class Monster(Entity):
         self.collider = 'box'
         if type == "small":
             self.scale = 1
+            self.health = 10
+        elif type == "medium":
+            self.health = 20
+        elif type == "large":
+            self.health = 40
+        print(self.health)
 
     def move(self, p, floor):
         self.dx = 0
@@ -33,8 +39,11 @@ class Monster(Entity):
 
         if self.attack_delay > 0: self.attack_delay -= 1
 
+        if self.health <= 0:
+            print("MONSTER DEAD")
+            self.disable()
+
     def attack(self, p):
         if self.attack_delay == 0:
             self.attack_delay = 10
-            p.health -= 1
-        print(p.health)
+            p.health -= 2
