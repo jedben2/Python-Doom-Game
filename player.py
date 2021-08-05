@@ -1,3 +1,4 @@
+# Player
 from ursina import *
 from ursina import mouse
 
@@ -19,13 +20,11 @@ class Player(Entity):
         self.model = 'quad'
         # self.color = (255, 0, 0, 255)
         self.collider = 'box'
-        self.texture = "assets//animations//player//move//right//0.png"
+        self.texture = "assets//animations//player//idle//right//0.png"
 
     def move(self, other):
         self.y -= .18
         self.dx = (held_keys['d'] - held_keys['a']) * self.dt * 20
-        self.direction = "right"
-        if mouse.x < self.screen_position.x: self.direction = "left"
 
         self.position += Vec2(self.dx, self.dy)
 
@@ -46,18 +45,21 @@ class Player(Entity):
 
         if self.dx != 0:
             if self.dx > 0:
-                if self.frame > 13:
-                    self.frame = 0
-                if self.frame % 1 == 0:
-                    self.texture = f"assets//animations//player//move//right//{self.frame}.png"
-                print(self.frame)
-            elif self.dx < 0:
-                if self.frame > 13:
-                    self.frame = 0
-                if self.frame % 1 == 0:
-                    self.texture = f"assets//animations//player//move//left//{self.frame}.png"
-                print(self.frame)
-            self.frame += 1
+                self.direction = "right"
+            else:
+                self.direction = "left"
+
+            if self.frame > 13:
+                self.frame = 0
+            if self.frame % 1 == 0:
+                self.texture = f"assets//animations//player//move//{self.direction}//{self.frame}.png"
+        else:
+            if self.frame > 9:
+                self.frame = 0
+            if self.frame % 3 == 0:
+                self.texture = f"assets//animations//player//idle//{self.direction}//{self.frame // 3}.png"
+        self.frame += 1
+
 
     def update(self):
         pass
