@@ -17,6 +17,7 @@ class Monster(Entity):
         self.collider = 'box'
         self.TYPE = type
         self.speed = speed
+
         if self.TYPE == "small":
             self.scale = 1
             self.health = 30
@@ -38,12 +39,29 @@ class Monster(Entity):
             self.scale = 2
             self.health = 120
             self.dmg = 10
+            if self.speed == "run":
+                self.scale = 2.4
+                self.scale_x = 1.8
+                self.dmg = 14
 
     def move(self, p, floor, camera):
         attacking = False
 
-        if self.TYPE == "small": self.y += .05
-        elif self.TYPE == "medium": self.y  += -.19
+        if self.TYPE == "small":
+            if self.speed == "walk":
+                self.y += .05
+            else:
+                self.y += -.11
+        elif self.TYPE == "medium":
+            if self.speed == "walk":
+                self.y += -.19
+            else:
+                self.y += -.42
+        elif self.TYPE == "large":
+            if self.speed == "walk":
+                self.y += -.42
+            else:
+                self.y += -.65
 
         if self.intersects(p).hit:
             self.attack(p, camera)
@@ -72,7 +90,7 @@ class Monster(Entity):
         if self.attack_delay < 10: self.attack_delay += 1
 
         if self.health <= 0:
-            print("MONSTER DEAD")
+            print(f"{self.TYPE.upper()} MONSTER DEAD")
             self.disable()
 
         if self.dx != 0:
@@ -92,6 +110,11 @@ class Monster(Entity):
                 self.y -= -.19
             else:
                 self.y -= -.42
+        elif self.TYPE == "large":
+            if self.speed == "walk":
+                self.y -= -.42
+            else:
+                self.y -= -.65
 
     def attack(self, p, camera):
         if self.attack_delay == 10:
@@ -102,4 +125,4 @@ class Monster(Entity):
                 p.dx = -0.3
             else:
                 p.dx = 0.3
-            camera.shake(duration=0.05, magnitude=10)
+            camera.shake(duration=0.05, magnitude=5)
