@@ -1,9 +1,7 @@
 # Game
 from ursina.prefabs.health_bar import HealthBar
-from ursina import mouse
 from ursina import *
-import player, gun, monster
-import numpy as np
+from assets.scripts import monster, gun, player
 
 app = Ursina()
 window.vsync = 60
@@ -59,7 +57,7 @@ def update():
         bullet.travel(monsters, floor)
         if bullet.enabled == False: bullets.remove(bullet)
 
-    if held_keys['left mouse']:
+    if held_keys['left mouse'] and shot_time > 1:
         bullets.append(gun.Bullet(g))
         if shot_time > 1: shot_time = 0
 
