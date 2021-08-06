@@ -38,7 +38,7 @@ class Bullet(Entity):
         self.rotation_z = gun.rotation_z + random.randrange(-200, 201) / 100
         self.position = Vec2(gun.x + 0.1 * np.cos(-1 * self.rotation_z * np.pi / 180),
                              gun.y + 0.5 * np.sin(-1 * self.rotation_z * np.pi / 180))
-        self.collider = 'box'
+        self.collider = 'sphere'
 
     def travel(self, monsters, floor):
         self.position += self.right * 1.5
@@ -48,5 +48,8 @@ class Bullet(Entity):
             if self.intersects(monster).hit:
                 monster.health -= 1
                 self.touched = True
+                self.scale = .7
+                self.texture = "assets//animations//bullet//explosion.png"
+                self.model = 'quad'
         if self.intersects(floor).hit:
             self.disable()
