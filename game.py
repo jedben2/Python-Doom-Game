@@ -26,8 +26,8 @@ camera.add_script(SmoothFollow(target=p, offset=[0, 0, -25], speed=20))
 bullets = []
 monsters = []
 
-monsters.append(monster.Monster(position=Vec2(-10, 0), type="small"))
-monsters.append(monster.Monster(position=Vec2(10, 0), type="small"))
+monsters.append(monster.Monster(position=Vec2(-10, 0), type="medium", speed="run"))
+monsters.append(monster.Monster(position=Vec2(10, 0), type="medium", speed="walk"))
 
 shot_time = 0
 
