@@ -33,6 +33,7 @@ class Bullet(Entity):
         super().__init__()
         self.model = 'sphere'
         self.texture = 'assets//animations//bullet//plasma.png'
+        self.color = rgb(255, 255, 0, 255)
         self.scale_y = .15
         self.scale_x = .15
         self.rotation_z = gun.rotation_z + random.randrange(-200, 201) / 100
