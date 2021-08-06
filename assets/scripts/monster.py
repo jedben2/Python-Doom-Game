@@ -8,30 +8,45 @@ class Monster(Entity):
     attack_delay = 10
     frame = 0
 
-    def __init__(self, position, type):
+    def __init__(self, position, type, speed):
         super().__init__()
         self.model = 'quad'
         self.position = position
         self.collider = 'box'
-        if type == "small":
+        self.TYPE = type
+        self.speed = speed
+        if self.TYPE == "small":
             self.scale = 1
-            self.health = 10
-        elif type == "medium":
-            self.health = 20
-        elif type == "large":
-            self.health = 40
-        print(self.health)
+            self.health = 30
+            if self.speed == "run":
+                self.scale = 1.2
+        elif self.TYPE == "medium":
+            self.scale = 1.5
+            self.health = 60
+            if self.speed == "run":
+                self.scale = 1.8
+                self.scale_x = 1.6
+        elif self.TYPE == "large":
+            self.scale = 2
+            self.health = 120
 
     def move(self, p, floor):
-        self.y += .05
+        if self.TYPE == "small": self.y += .05
+        elif self.TYPE == "medium": self.y  += -.19
         self.dx = 0
         if self.intersects(p).hit:
             self.attack(p)
         else:
             if self.x > p.x:
-                self.dx = -.04
+                if self.speed == "walk":
+                    self.dx = -.04
+                else:
+                    self.dx = -.13
             else:
-                self.dx = .04
+                if self.speed == "walk":
+                    self.dx = .04
+                else:
+                    self.dx = .13
 
         self.position += Vec2(self.dx, self.dy)
 
@@ -52,12 +67,22 @@ class Monster(Entity):
             else:
                 self.direction = "left"
 
-            if self.frame > 33:
+            if self.frame > 22:
                 self.frame = 0
-            if self.frame % 3 == 0:
-                self.texture = f"assets//animations//monsters//1//walk//{self.direction}//{int(self.frame // 3)}.png"
+            if self.frame % 2 == 0:
+                self.texture = f"assets//animations//monsters//1//{self.speed}//{self.direction}//{int(self.frame // 2)}.png"
         self.frame += 1
-        self.y -= .05
+
+        if self.TYPE == "small":
+            if self.speed == "walk":
+                self.y -= .05
+            else:
+                self.y -= -.11
+        elif self.TYPE == "medium":
+            if self.speed == "walk":
+                self.y -= -.19
+            else:
+                self.y -= -.42
 
     def attack(self, p):
         if self.attack_delay == 0:
