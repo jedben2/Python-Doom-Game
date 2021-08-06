@@ -23,8 +23,18 @@ class Player(Entity):
     def move(self, floor):
         self.y -= .18
 
-        self.dx = (held_keys['d'] - held_keys['a']) * self.dt * 20 * (1 + held_keys['left shift']) * (
-                1 - held_keys['left mouse'])
+        self.dx += (held_keys['d'] - held_keys['a']) * self.dt * 20 * (1 + held_keys['left shift']) * (
+                1 - held_keys['left mouse']) * .1
+
+        if self.dx != 0:
+            if self.dx > (held_keys['d']) * self.dt * 20 * (1 + held_keys['left shift']) * (
+                    1 - held_keys['left mouse']):
+                self.dx = (held_keys['d']) * self.dt * 20 * (1 + held_keys['left shift']) * (
+                        1 - held_keys['left mouse'])
+            elif self.dx < (-1 * held_keys['a']) * self.dt * 20 * (1 + held_keys['left shift']) * (
+                    1 - held_keys['left mouse']):
+                self.dx = (-1 * held_keys['a']) * self.dt * 20 * (1 + held_keys['left shift']) * (
+                        1 - held_keys['left mouse'])
 
         self.position += Vec2(self.dx, self.dy)
 
