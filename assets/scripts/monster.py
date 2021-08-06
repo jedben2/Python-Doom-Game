@@ -48,19 +48,19 @@ class Monster(Entity):
         if self.intersects(p).hit:
             self.attack(p, camera)
 
-        else:
-            if self.x > p.x:
-                self.direction = "left"
-                if self.speed == "walk":
-                    self.dx = -.04
-                else:
-                    self.dx = -.13
+        # else:
+        if self.x > p.x:
+            self.direction = "left"
+            if self.speed == "walk":
+                self.dx = -.04
             else:
-                self.direction = "right"
-                if self.speed == "walk":
-                    self.dx = .04
-                else:
-                    self.dx = .13
+                self.dx = -.13
+        else:
+            self.direction = "right"
+            if self.speed == "walk":
+                self.dx = .04
+            else:
+                self.dx = .13
 
         self.position += Vec2(self.dx, self.dy)
 
@@ -102,4 +102,4 @@ class Monster(Entity):
                 p.dx = -0.3
             else:
                 p.dx = 0.3
-            camera.shake(0.1)
+            camera.shake(duration=0.05, magnitude=10)

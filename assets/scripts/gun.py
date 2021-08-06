@@ -47,7 +47,7 @@ class Bullet(Entity):
         for monster in monsters:
             if self.intersects(monster).hit:
                 monster.health -= 1
-                monster.shake(0.1, 1)
+                monster.shake(duration=.1, magnitude=.5)
 
                 self.touched = True
                 self.scale = random.randint(30, 80) / 100

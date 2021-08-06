@@ -38,18 +38,16 @@ class Player(Entity):
 
         self.position += Vec2(self.dx, self.dy)
 
+        self.dy -= 9.81 * self.dt
         if self.intersects(floor).hit:
             self.y = 0
             self.dy = held_keys['w'] * .65
-        else:
-            self.dy -= 9.81 * self.dt
         self.y += .18
 
         if self.dx != 0:
+            self.direction = "left"
             if self.dx > 0:
                 self.direction = "right"
-            else:
-                self.direction = "left"
 
             if self.frame > 13:
                 self.frame = 0

@@ -35,6 +35,7 @@ shot_time = 0
 
 p_old_x, p_old_y = p.x, p.y
 
+
 def update():
     global shot_time, p_old_y, p_old_x
 
@@ -62,7 +63,6 @@ def update():
     if held_keys['left mouse'] and shot_time > 1:
         bullets.append(gun.Bullet(g))
         if shot_time > 1: shot_time = 0
-
 
     if shot_time < 2:
         relative_x, relative_y = g.screen_position.x, g.screen_position.y
