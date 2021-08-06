@@ -26,8 +26,10 @@ camera.add_script(SmoothFollow(target=p, offset=[0, 0, -25], speed=20))
 bullets = []
 monsters = []
 
-monsters.append(monster.Monster(position=Vec2(-10, 0), type="medium", speed="run"))
+monsters.append(monster.Monster(position=Vec2(-10, 0), type="small", speed="run"))
 monsters.append(monster.Monster(position=Vec2(10, 0), type="medium", speed="walk"))
+monsters.append(monster.Monster(position=Vec2(20, 0), type="medium", speed="run"))
+monsters.append(monster.Monster(position=Vec2(-20, 0), type="small", speed="walk"))
 
 shot_time = 0
 
@@ -47,7 +49,7 @@ def update():
     p_old_x, p_old_y = p.x, p.y
 
     for monster in monsters:
-        monster.move(p, floor)
+        monster.move(p, floor, camera)
         if monster.enabled == False: monsters.remove(monster)
 
     g.attach(p)
