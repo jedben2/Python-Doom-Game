@@ -47,9 +47,13 @@ class Bullet(Entity):
         for monster in monsters:
             if self.intersects(monster).hit:
                 monster.health -= 1
+                monster.shake(0.1, 1)
+
                 self.touched = True
-                self.scale = .7
+                self.scale = random.randint(30, 80) / 100
                 self.texture = "assets//animations//bullet//explosion.png"
-                self.model = 'quad'
+
         if self.intersects(floor).hit:
-            self.disable()
+            self.touched = True
+            self.scale = random.randint(30, 80) / 100
+            self.texture = "assets//animations//bullet//explosion.png"
