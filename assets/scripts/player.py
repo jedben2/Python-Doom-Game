@@ -20,13 +20,15 @@ class Player(Entity):
         self.collider = 'box'
         self.texture = "assets//animations//player//idle//right//0.png"
 
-    def move(self, other):
+    def move(self, floor):
         self.y -= .18
-        self.dx = (held_keys['d'] - held_keys['a']) * self.dt * 20 * (1 + held_keys['left shift'])
+
+        self.dx = (held_keys['d'] - held_keys['a']) * self.dt * 20 * (1 + held_keys['left shift']) * (
+                1 - held_keys['left mouse'])
 
         self.position += Vec2(self.dx, self.dy)
 
-        if self.intersects(other).hit:
+        if self.intersects(floor).hit:
             self.y = 0
             self.dy = held_keys['w'] * .65
         else:

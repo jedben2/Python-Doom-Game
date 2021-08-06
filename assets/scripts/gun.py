@@ -5,7 +5,6 @@ import numpy as np
 
 
 class Gun(Entity):
-
     def attach(self, p):
         self.position = Vec2(p.x + 0.3, p.y)
 
@@ -28,12 +27,14 @@ class Gun(Entity):
 
 class Bullet(Entity):
     dt = 1 / 120
+    touched = False
 
     def __init__(self, gun):
         super().__init__()
-        self.model = 'quad'
-        self.scale_y = .05
-        self.scale_x = .3
+        self.model = 'sphere'
+        self.texture = 'assets//animations//bullet//plasma.png'
+        self.scale_y = .15
+        self.scale_x = .15
         self.rotation_z = gun.rotation_z + random.randrange(-200, 201) / 100
         self.position = Vec2(gun.x + 0.1 * np.cos(-1 * self.rotation_z * np.pi / 180),
                              gun.y + 0.5 * np.sin(-1 * self.rotation_z * np.pi / 180))
@@ -42,9 +43,10 @@ class Bullet(Entity):
     def travel(self, monsters, floor):
         self.position += self.right * 1.5
         if self.x > 100 or self.x < -100: self.disable()
+        if self.touched: self.disable()
         for monster in monsters:
             if self.intersects(monster).hit:
                 monster.health -= 1
-                self.disable()
+                self.touched = True
         if self.intersects(floor).hit:
             self.disable()
