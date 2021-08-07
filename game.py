@@ -18,7 +18,7 @@ p_healthbar.position = Vec2(-.15 / 2, .15 / 2)
 p_healthbar.scale_x = .15
 
 g = gun.Gun(p)
-floor = Entity(model='quad', position=Vec2(0, -1), scale_x=50, collider='box', texture='grass')
+floor = Entity(model='quad', position=Vec2(0, -1), scale_x=100, collider='box', texture='grass')
 
 camera.position = (p.x, p.y, -10)
 camera.add_script(SmoothFollow(target=p, offset=[0, 0, -25], speed=20))
@@ -26,8 +26,12 @@ camera.add_script(SmoothFollow(target=p, offset=[0, 0, -25], speed=20))
 bullets = []
 monsters = []
 
-monsters.append(monster.Monster(position=Vec2(12, 0), type="large", speed="run"))
-monsters.append(monster.Monster(position=Vec2(10, 0), type="large", speed="walk"))
+monsters.append(monster.Small(position=Vec2(10, 0), speed="walk"))
+monsters.append(monster.Medium(position=Vec2(12, 0), speed="walk"))
+monsters.append(monster.Large(position=Vec2(14, 0), speed="walk"))
+monsters.append(monster.Small(position=Vec2(30, 0), speed="run"))
+monsters.append(monster.Medium(position=Vec2(34, 0), speed="run"))
+monsters.append(monster.Large(position=Vec2(38, 0), speed="run"))
 
 shot_time = 0
 
@@ -49,6 +53,7 @@ def update():
 
     for monster in monsters:
         monster.move(p, floor, camera)
+        monster.animate_frames()
         if monster.enabled == False: monsters.remove(monster)
 
     g.attach(p)
