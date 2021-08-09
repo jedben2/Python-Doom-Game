@@ -34,7 +34,6 @@ shot_time = 0
 
 p_old_x, p_old_y = p.x, p.y
 
-
 def update():
     global shot_time, p_old_y, p_old_x
 
@@ -77,7 +76,6 @@ def update():
         p.texture = f"assets//animations//player//shoot//{p.direction}//{shot_time}"
 
     p_healthbar.value = p.health
-
 
 # EditorCamera()
 app.run()
