@@ -46,6 +46,15 @@ class Bullet(Entity):
         if self.x > 100 or self.x < -100: self.disable()
         if self.touched: self.disable()
         for monster in monsters:
+            if str(type(monster)).find("Tank") != -1:
+                for projectile in monster.projectiles:
+                    if self.intersects(projectile).hit:
+                        projectile.disable()
+
+                        self.touched = True
+                        self.scale = random.randint(30, 80) / 100
+                        self.texture = "assets//animations//bullet//explosion.png"
+
             if self.intersects(monster).hit:
                 monster.health -= 1
                 monster.shake(duration=.1, magnitude=.1)

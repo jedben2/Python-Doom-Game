@@ -50,14 +50,14 @@ def update():
     for monster in monsters:
         monster.move(p, floor, camera)
         monster.animate_frames()
-        if monster.enabled == False: monsters.remove(monster)
+        if not monster.enabled: monsters.remove(monster)
 
     g.attach(p)
     g.look_at_mouse()
 
     for bullet in bullets:
         bullet.travel(monsters, floor)
-        if bullet.enabled == False: bullets.remove(bullet)
+        if not bullet.enabled: bullets.remove(bullet)
 
     if held_keys['left mouse'] and shot_time > 1:
         bullets.append(gun.Bullet(g))
@@ -77,5 +77,4 @@ def update():
 
     p_healthbar.value = p.health
 
-# EditorCamera()
 app.run()
