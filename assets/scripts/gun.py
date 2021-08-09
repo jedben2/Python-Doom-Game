@@ -1,4 +1,5 @@
 # Gun + Bullets
+import ursina.prefabs.trail_renderer
 from ursina import *
 from ursina import mouse
 import numpy as np
@@ -30,8 +31,7 @@ class Bullet(Entity):
     touched = False
 
     def __init__(self, gun):
-        super().__init__()
-        self.model = 'sphere'
+        super().__init__(model = 'sphere')
         self.texture = 'assets//animations//bullet//plasma.png'
         self.color = rgb(255, 255, 0, 255)
         self.scale_y = .15
@@ -48,7 +48,7 @@ class Bullet(Entity):
         for monster in monsters:
             if self.intersects(monster).hit:
                 monster.health -= 1
-                monster.shake(duration=.1, magnitude=.5)
+                monster.shake(duration=.1, magnitude=.1)
 
                 self.touched = True
                 self.scale = random.randint(30, 80) / 100

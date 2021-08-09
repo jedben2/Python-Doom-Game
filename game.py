@@ -1,7 +1,8 @@
 # Game
 from ursina.prefabs.health_bar import HealthBar
 from ursina import *
-from assets.scripts import monster, gun, player
+from ursina.mesh_importer import *
+from assets.scripts import monster, gun, player, tank
 
 app = Ursina()
 window.vsync = 60
@@ -26,12 +27,8 @@ camera.add_script(SmoothFollow(target=p, offset=[0, 0, -25], speed=20))
 bullets = []
 monsters = []
 
-monsters.append(monster.Small(position=Vec2(10, 0), speed="walk"))
-monsters.append(monster.Medium(position=Vec2(12, 0), speed="walk"))
-monsters.append(monster.Large(position=Vec2(14, 0), speed="walk"))
-monsters.append(monster.Small(position=Vec2(30, 0), speed="run"))
-monsters.append(monster.Medium(position=Vec2(34, 0), speed="run"))
-monsters.append(monster.Large(position=Vec2(38, 0), speed="run"))
+monsters.append(tank.Tank(position=Vec2(10, 0)))
+# t = Entity(model="assets/animations/monsters/tank/right_tank.obj", position=Vec2(0, 0))
 
 shot_time = 0
 
@@ -82,4 +79,5 @@ def update():
     p_healthbar.value = p.health
 
 
+# EditorCamera()
 app.run()
