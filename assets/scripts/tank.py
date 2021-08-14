@@ -2,6 +2,7 @@
 from ursina import *
 import time
 import numpy as np
+import simpleaudio as sa
 
 
 class Tank(Entity):
@@ -107,10 +108,12 @@ class Forcefield(Entity):
 
 
 class Projectile(Entity):
-    health = 10
+    explosion = sa.WaveObject.from_wave_file("assets//sounds//explosion.wav")
+    health = 6
     frame = 0
     dx = dy = 0
     dt = 1 / 120
+    dead = False
 
     def __init__(self, tank, speed, rot_speed):
         super().__init__(model='quad')
@@ -128,8 +131,15 @@ class Projectile(Entity):
             self.x += 2.3
 
     def move(self, player):
-        if self.health <= 0:
-            self.die()
+        if not self.dead and self.health <= 0:
+            self.dead = True
+            self.rotation_z = 0
+            self.frame = 0
+            self.scale *= 2
+            self.collider = None
+            self.explosion.play()
+        if self.dead:
+            return
         origin_rotation = self.rotation_z
         self.look_at_2d(target=player)
         player_angle = self.rotation_z
@@ -143,8 +153,14 @@ class Projectile(Entity):
         self.position += self.up * self.dt * self.speed
 
     def animate_frames(self):
+        if self.dead:
+            if self.frame > 12:
+                self.disable()
+                return
+            self.texture = f"assets//animations//monsters//tank//rocket//explosion//{self.frame}.png"
+            self.frame += 1
+            return
+
         self.texture = f"assets//animations//monsters//tank//rocket//{self.frame // 2}.png"
         self.frame += 1
         if self.frame == 4: self.frame = 0
-    def die(self):
-        self.disable()
