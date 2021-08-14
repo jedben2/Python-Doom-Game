@@ -3,6 +3,7 @@ import ursina.prefabs.trail_renderer
 from ursina import *
 from ursina import mouse
 import numpy as np
+import simpleaudio as sa
 
 
 class Gun(Entity):
@@ -27,6 +28,7 @@ class Gun(Entity):
 
 
 class Bullet(Entity):
+    shot = sa.WaveObject.from_wave_file("assets//sounds//plasma_shot.wav")
     dt = 1 / 120
     touched = False
 
@@ -40,6 +42,7 @@ class Bullet(Entity):
         self.position = Vec2(gun.x + 0.1 * np.cos(-1 * self.rotation_z * np.pi / 180),
                              gun.y + 0.5 * np.sin(-1 * self.rotation_z * np.pi / 180))
         self.collider = 'sphere'
+        self.shot.play()
 
     def travel(self, monsters, floor):
         self.position += self.right * 1.5
