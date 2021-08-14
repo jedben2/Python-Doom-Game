@@ -49,7 +49,8 @@ class Bullet(Entity):
             if str(type(monster)).find("Tank") != -1:
                 for projectile in monster.projectiles:
                     if self.intersects(projectile).hit:
-                        projectile.disable()
+                        projectile.health -= 1
+                        monster.shake(duration=.1, magnitude=.5)
 
                         self.touched = True
                         self.scale = random.randint(30, 80) / 100
@@ -57,7 +58,7 @@ class Bullet(Entity):
 
             if self.intersects(monster).hit:
                 monster.health -= 1
-                monster.shake(duration=.1, magnitude=.1)
+                monster.shake(duration=.1, magnitude=.5)
 
                 self.touched = True
                 self.scale = random.randint(30, 80) / 100

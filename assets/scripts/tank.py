@@ -52,7 +52,7 @@ class Tank(Entity):
 
         self.f.attach(self)
 
-        if held_keys['space']: self.projectiles.append(Projectile(self))
+        if held_keys['space']: self.projectiles.append(Projectile(self, random.randint(30, 60), random.randint(3, 6)))
 
         for projectile in self.projectiles:
             projectile.move(p)
@@ -107,12 +107,15 @@ class Forcefield(Entity):
 
 
 class Projectile(Entity):
+    health = 10
     frame = 0
     dx = dy = 0
     dt = 1 / 120
 
-    def __init__(self, tank):
+    def __init__(self, tank, speed, rot_speed):
         super().__init__(model='quad')
+        self.speed = speed
+        self.rot_speed = rot_speed
         self.position = tank.position + Vec2(0, 1.1)
         self.scale = .4
         self.collider = 'box'
@@ -125,13 +128,23 @@ class Projectile(Entity):
             self.x += 2.3
 
     def move(self, player):
+        if self.health <= 0:
+            self.die()
+        origin_rotation = self.rotation_z
         self.look_at_2d(target=player)
-        # print(self.rotation_z)
-        self.dx += self.up.x * self.dt
-        self.dy += self.up.y * self.dt
-        self.position += Vec2(self.dx, self.dy)
+        player_angle = self.rotation_z
+        self.rotation_z = origin_rotation
+        change_angle = player_angle - origin_rotation
+        if change_angle < -180:
+            change_angle += 360
+        if change_angle > 180:
+            change_angle -= 360
+        self.rotation_z += np.sign(change_angle) * self.rot_speed
+        self.position += self.up * self.dt * self.speed
 
     def animate_frames(self):
         self.texture = f"assets//animations//monsters//tank//rocket//{self.frame // 2}.png"
         self.frame += 1
         if self.frame == 4: self.frame = 0
+    def die(self):
+        self.disable()
