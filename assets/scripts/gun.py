@@ -31,6 +31,7 @@ class Bullet(Entity):
     shot = sa.WaveObject.from_wave_file("assets//sounds//plasma_shot.wav")
     dt = 1 / 120
     touched = False
+    hit_sound = sa.WaveObject.from_wave_file("assets//sounds//bullet_hit.wav")
 
     def __init__(self, gun):
         super().__init__(model = 'sphere')
@@ -52,6 +53,7 @@ class Bullet(Entity):
             if str(type(monster)).find("Tank") != -1:
                 for projectile in monster.projectiles:
                     if self.intersects(projectile).hit:
+                        self.hit_sound.play()
                         projectile.health -= 1
                         monster.shake(duration=.1, magnitude=.5)
 
@@ -60,6 +62,7 @@ class Bullet(Entity):
                         self.texture = "assets//animations//bullet//explosion.png"
 
             if self.intersects(monster).hit:
+                self.hit_sound.play()
                 monster.health -= 1
                 monster.shake(duration=.1, magnitude=.5)
 
