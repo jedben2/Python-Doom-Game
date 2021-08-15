@@ -3,17 +3,18 @@ from ursina import *
 import time
 import numpy as np
 import simpleaudio as sa
+from assets.scripts import monster
 
 
 class Tank(Entity):
-    health = 1000
-    dmg = 20
-    attack_delay = 0
+    health = 10
     frame = 0
     direction = "left"
     dy = dx = 0
     dt = 1 / 120
     projectiles = []
+    last_shot = time.time()
+    dead = False
 
     def __init__(self, position):
         super().__init__(position=position,
@@ -29,10 +30,6 @@ class Tank(Entity):
 
         self.position += Vec2(self.dx, self.dy)
 
-        # if self.intersects(p).hit:
-        #     self.attack(p, camera)
-
-        # else:
         if self.x > p.x:
             self.direction = "left"
             self.dx = -.01
@@ -45,19 +42,31 @@ class Tank(Entity):
         else:
             self.dy -= 9.81 * self.dt
 
-        if self.health <= 0:
-            self.f.disable()
-            self.disable()
+        if self.health <= 0 and not self.dead:
+            self.dead = True
+            self.explosion = Explosion(self)
+            self.collider = None
+
+        if self.dead:
+            self.explosion.animate_frames()
+            if self.explosion.frame > 13 * 3:
+                self.visible = self.f.visible = False
+            if self.explosion.frame > 21 * 3:
+                self.f.disable()
+                self.explosion.cover.disable()
+                self.explosion.disable()
+                self.disable()
 
         self.y += 2
 
         self.f.attach(self)
 
-        if held_keys['space']: self.projectiles.append(Projectile(self, random.randint(30, 60), random.randint(3, 6)))
-
         for projectile in self.projectiles:
             projectile.move(p)
             if not projectile.enabled: self.projectiles.remove(projectile)
+        if time.time() - self.last_shot > 4 and not self.dead:
+            self.projectiles.append(Projectile(self, random.randint(30, 60), random.randint(3, 6)))
+            self.last_shot = time.time()
 
     def animate_frames(self):
         if self.dx != 0:
@@ -69,19 +78,6 @@ class Tank(Entity):
         self.f.animate_frames()
         for projectile in self.projectiles:
             projectile.animate_frames()
-
-    def attack(self, p, camera):
-        if self.attack_delay < 100: self.attack_delay += 1
-        if self.attack_delay == 100:
-            self.attack_delay = 0
-            p.health -= self.dmg
-
-            if p.direction == "right":
-                p.dx = -0.2
-            else:
-                p.dx = 0.2
-            camera.shake(duration=0.05, magnitude=5)
-        if self.attack_delay < 10: self.attack_delay += 1
 
 
 class Forcefield(Entity):
@@ -137,7 +133,7 @@ class Projectile(Entity):
             self.frame = 0
             self.scale *= 2
             self.collider = None
-            self.explosion.play()
+            # self.explosion.play()
         if self.dead:
             return
         origin_rotation = self.rotation_z
@@ -164,3 +160,22 @@ class Projectile(Entity):
         self.texture = f"assets//animations//monsters//tank//rocket//{self.frame // 2}.png"
         self.frame += 1
         if self.frame == 4: self.frame = 0
+
+class Explosion(Entity):
+    frame = 0
+    def __init__(self, tank):
+        super().__init__(model='quad', scale=16)
+        self.position = tank.position
+        self.y += 2
+    def animate_frames(self):
+        self.texture = f"assets//animations//monsters//tank//death//{self.frame // 3}.png"
+        if self.frame == 13 * 3:
+            self.cover = ExplosionCover()
+        self.frame += 1
+        if self.frame == 21 * 3 + 2: self.disable()
+
+class ExplosionCover(Entity):
+    def __init__(self):
+        super().__init__(model='quad', position=Vec2(0, 0), color=rgb(255, 166, 25, 255), scale=30)
+        self.always_on_top = True
+        self.fade_out(value=0, duration=1)
